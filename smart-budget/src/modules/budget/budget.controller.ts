@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Budget } from './budget.entity';
 import { BudgetService } from './budget.service';
-import { BudgetResponseDto } from './dto/budget-response.dto';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 
 @Controller('budget')
@@ -11,7 +11,7 @@ export class BudgetController {
   @Post('/calculate')
   async calculateBudget(
     @Body() createBudgetDto: CreateBudgetDto,
-  ): Promise<BudgetResponseDto> {
+  ): Promise<Budget> {
     return await this.budgetService.calculateBudget(createBudgetDto);
   }
 

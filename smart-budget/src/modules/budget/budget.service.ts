@@ -1,13 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { BudgetResponseDto } from './dto/budget-response.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Budget } from './budget.entity';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { Expense, ExpenseBreakdown } from './interfaces/expense.interface';
 
 @Injectable()
 export class BudgetService {
-  constructor() {}
+  constructor(
+    @InjectRepository(Budget)
+    private readonly budgetRepository: Repository<Budget>,
+  ) {}
 
-  async calculateBudget(data: CreateBudgetDto): Promise<BudgetResponseDto> {
+  async calculateBudget(data: CreateBudgetDto): Promise<Budget> {
     const totalExpenses = this.calculateTotalExpenses(data.expenses);
     if (
       data.income <
@@ -29,7 +34,8 @@ export class BudgetService {
     );
     const disposableIncome =
       data.income - totalExpenses - savings - investments;
-    return {
+
+    const budget = this.budgetRepository.create({
       userId: data.userId,
       income: data.income,
       totalExpenses,
@@ -40,17 +46,23 @@ export class BudgetService {
         data.expenses,
         data.income,
       ),
-    };
+    });
+
+    return await this.budgetRepository.save(budget);
   }
+
   private calculateTotalExpenses(expenses: Expense[]): number {
     return expenses.reduce((total, expense) => total + expense.amount, 0);
   }
+
   private calculateSavings(income: number, percentage: number): number {
     return income * (percentage / 100);
   }
+
   private calculateInvestments(income: number, percentage: number): number {
     return income * (percentage / 100);
   }
+
   private generateExpenseBreakdown(
     expenses: Expense[],
     income: number,

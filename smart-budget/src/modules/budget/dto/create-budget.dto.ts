@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsPositive,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -27,6 +28,7 @@ export class CreateBudgetDto {
 
   @IsNotEmpty()
   @IsNumber()
+  @IsPositive()
   income: number;
 
   @IsNotEmpty()
