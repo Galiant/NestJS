@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Budget } from './budget.entity';
@@ -74,7 +78,17 @@ export class BudgetService {
     }));
   }
 
-  getBudgetHistory(): number {
-    return 1;
+  async getBudgetHistory(userId: string): Promise<Budget[]> {
+    const userData = await this.budgetRepository.find({
+      where: {
+        userId,
+      },
+    });
+
+    if (!userData) {
+      throw new NotFoundException(`Data with user ID ${userId} not found`);
+    }
+
+    return userData;
   }
 }
