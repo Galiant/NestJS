@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, Query } from '@nestjs/common';
 import { Budget } from './budget.entity';
 import { BudgetService } from './budget.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
@@ -16,9 +16,9 @@ export class BudgetController {
   }
 
   @Get('/history')
-  getBudgetHistory() {
+  async getBudgetHistory(@Query('userId') userId: string) {
     this.logger.verbose('Returns historical budget calculations for a user.');
 
-    return this.budgetService.getBudgetHistory();
+    return await this.budgetService.getBudgetHistory(userId);
   }
 }
