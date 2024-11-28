@@ -1,9 +1,19 @@
-import { Body, Controller, Get, Logger, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/shared/guards/jwtAuth.guard';
 import { Budget } from './budget.entity';
 import { BudgetService } from './budget.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 
 @Controller('budget')
+@UseGuards(JwtAuthGuard)
 export class BudgetController {
   private logger = new Logger('TaskController');
   constructor(private readonly budgetService: BudgetService) {}
