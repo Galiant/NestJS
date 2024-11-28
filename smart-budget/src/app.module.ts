@@ -4,7 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { configValidationSchema } from './config.schema';
+import { AuthModule } from './modules/auth/auth.module';
 import { BudgetModule } from './modules/budget/budget.module';
+import { FinancialMicroservicesModule } from './modules/financial-microservices/financial-microservices.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { BudgetModule } from './modules/budget/budget.module';
       }),
     }),
     BudgetModule,
+    AuthModule,
+    FinancialMicroservicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
