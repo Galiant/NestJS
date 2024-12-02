@@ -1,8 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/shared/guards/jwtAuth.guard';
 import { FinancialMicroservicesService } from './financial-microservices.service';
 
 @Controller('financial-microservices')
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class FinancialMicroservicesController {
   constructor(
     private readonly financialMicroservices: FinancialMicroservicesService,
@@ -11,8 +12,8 @@ export class FinancialMicroservicesController {
   @Get('/exchange-rate')
   async getExchangeRate(
     @Query('currency') currency: string,
-  ): Promise<{ rate: number }> {
-    const rate = await this.financialMicroservices.getExchangeRate(currency);
-    return { rate };
+  ): Promise<{ rates: number }> {
+    const rates = await this.financialMicroservices.getExchangeRate(currency);
+    return { rates };
   }
 }
